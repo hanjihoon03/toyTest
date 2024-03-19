@@ -1,28 +1,33 @@
 package toypro.developer;
 
-
 import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-import toypro.developer.domain.Member;
-import toypro.developer.repository.MemberRepository;
+import toypro.developer.domain.Article;
+import toypro.developer.repository.BlogRepository;
+
+import java.time.LocalDateTime;
+
+import static java.time.LocalDateTime.*;
 
 @Component
 @RequiredArgsConstructor
 public class InitData {
 
-    private final MemberRepository repository;
+    private final BlogRepository repository;
 
     @PostConstruct
     @Transactional
-    public void init() {
-        Member member1 = new Member(1L, "name1");
-        Member member2 = new Member(2L, "name2");
-        Member member3 = new Member(3L, "name3");
+    public void initData() {
+        Article article = new Article("제목1", "내용1", now(), now());
+        Article article1 = new Article("제목2", "내용2", now(), now());
+        Article article2 = new Article("제목3", "내용3", now(), now());
 
-        repository.save(member1);
-        repository.save(member2);
-        repository.save(member3);
+        repository.save(article);
+        repository.save(article1);
+        repository.save(article2);
+
     }
+
 }
