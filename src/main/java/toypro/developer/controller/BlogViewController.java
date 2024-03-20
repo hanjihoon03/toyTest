@@ -15,38 +15,41 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 
-@Controller
 @RequiredArgsConstructor
+@Controller
 public class BlogViewController {
 
-    private final BlogService service;
+    private final BlogService blogService;
 
     @GetMapping("/articles")
     public String getArticles(Model model) {
-        List<ArticleListViewResponse> articles = service.findAll().stream()
-                .map(article -> new ArticleListViewResponse(article))
+        List<ArticleListViewResponse> articles = blogService.findAll()
+                .stream()
+                .map(ArticleListViewResponse::new)
                 .toList();
-
-        model.addAttribute("articles", articles); // 리스트 저장
+        model.addAttribute("articles", articles);
 
         return "articleList";
     }
 
     @GetMapping("/articles/{id}")
     public String getArticle(@PathVariable Long id, Model model) {
-        Article article = service.findById(id);
+        Article article = blogService.findById(id);
         model.addAttribute("article", new ArticleViewResponse(article));
+
         return "article";
     }
+
 
     @GetMapping("/new-article")
     public String newArticle(@RequestParam(required = false) Long id, Model model) {
         if (id == null) {
             model.addAttribute("article", new ArticleViewResponse());
         } else {
-            Article article = service.findById(id);
+            Article article = blogService.findById(id);
             model.addAttribute("article", new ArticleViewResponse(article));
         }
+
         return "newArticle";
     }
 }

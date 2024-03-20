@@ -10,7 +10,16 @@ spring:
   h2:
     console:
       enabled: true
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 179440405929-n0b39vhm90pav6ofpoo55ksmmg6if4it.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
   jpa:
     hibernate:
       ddl-auto: create
@@ -19,11 +28,6 @@ spring:
         # show_sql: true # 주석 처리하여 주석 처리된 상태로 둠
         format_sql: true
         default_batch_fetch_size: 10
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql: trace
 
 jwt:
   issuer: ajufresh@gmail.com

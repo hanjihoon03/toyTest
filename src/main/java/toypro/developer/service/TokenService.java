@@ -7,8 +7,8 @@ import toypro.developer.domain.User;
 
 import java.time.Duration;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class TokenService {
 
     private final TokenProvider tokenProvider;
@@ -16,9 +16,9 @@ public class TokenService {
     private final UserService userService;
 
     public String createNewAccessToken(String refreshToken) {
-        //토큰 유효성 검사에 실패하면 예외 발생
-        if (!tokenProvider.validToken(refreshToken)) {
-            throw new IllegalStateException("Unexpected token");
+        // 토큰 유효성 검사에 실패하면 예외 발생
+        if(!tokenProvider.validToken(refreshToken)) {
+            throw new IllegalArgumentException("Unexpected token");
         }
 
         Long userId = refreshTokenService.findByRefreshToken(refreshToken).getUserId();

@@ -9,20 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class UserViewController {
+
     @GetMapping("/login")
     public String login() {
-        return "login";
+        return "oauthLogin";
     }
 
     @GetMapping("/signup")
     public String signup() {
         return "signup";
-    }
-
-    @GetMapping("logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response) {
-        new SecurityContextLogoutHandler().logout(request, response, SecurityContextHolder.getContext()
-                .getAuthentication());
-        return "redirect:login";
     }
 }

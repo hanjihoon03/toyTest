@@ -12,6 +12,7 @@ import toypro.developer.dto.ArticleResponse;
 import toypro.developer.dto.UpdateArticleRequest;
 import toypro.developer.service.BlogService;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -22,37 +23,33 @@ public class BlogApiController {
     private final BlogService blogService;
 
     @PostMapping("/api/articles")
-    public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request) {
-        //RequestBody 요청 값 매핑
-        Article savedArticle = blogService.save(request);
+    public ResponseEntity<Article> addArticle(@RequestBody AddArticleRequest request, Principal principal) {
+        Article savedArticle = blogService.save(request, principal.getName());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(savedArticle);
     }
 
     @GetMapping("/api/articles")
-    public ResponseEntity<List<ArticleResponse>> findAllArticle() {
-        List<ArticleResponse> findAllArticle = blogService.findAll()
+    public ResponseEntity<List<ArticleResponse>> findAllArticles() {
+        List<ArticleResponse> articles = blogService.findAll()
                 .stream()
-                .map(article -> new ArticleResponse(article.getTitle(), article.getContent()))
-                .collect(Collectors.toList());
+                .map(ArticleResponse::new)
+                .toList();
 
         return ResponseEntity.ok()
-                .body(findAllArticle);
-
+                .body(articles);
     }
-
     @GetMapping("/api/articles/{id}")
-    public ResponseEntity<ArticleResponse> findArticle(@PathVariable Long id) {
-        Article findArticle = blogService.findById(id);
+    public ResponseEntity<ArticleResponse> findArticle(@PathVariable long id) {
+        Article article = blogService.findById(id);
 
         return ResponseEntity.ok()
-                .body(new ArticleResponse(findArticle.getTitle(), findArticle.getContent()));
-
+                .body(new ArticleResponse(article));
     }
 
     @DeleteMapping("/api/articles/{id}")
-    public ResponseEntity<Void> deleteArticle(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteArticle(@PathVariable long id) {
         blogService.delete(id);
 
         return ResponseEntity.ok()
@@ -60,11 +57,12 @@ public class BlogApiController {
     }
 
     @PutMapping("/api/articles/{id}")
-    public ResponseEntity<Article> updateArticle(@PathVariable Long id,
+    public ResponseEntity<Article> updateArticle(@PathVariable long id,
                                                  @RequestBody UpdateArticleRequest request) {
-        Article updateArticle = blogService.update(id, request);
+        Article updatedArticle = blogService.update(id, request);
 
         return ResponseEntity.ok()
-                .body(updateArticle);
+                .body(updatedArticle);
     }
+
 }

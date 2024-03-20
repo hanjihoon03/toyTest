@@ -1,9 +1,6 @@
 package toypro.developer.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,42 +8,43 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
-@Entity
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Entity
 public class Article {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
     private Long id;
+
     @Column(name = "title", nullable = false)
     private String title;
+
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "author", nullable = false)
+    private String author;
+
     @CreatedDate
-    @Column(name = "create_at")
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     @Builder
-    public Article(String title, String content) {
+    public Article(String author, String title, String content) {
+        this.author = author;
         this.title = title;
         this.content = content;
-    }
-
-    public Article(String title, String content, LocalDateTime createdAt, LocalDateTime updateAt) {
-        this.title = title;
-        this.content = content;
-        this.createdAt = createdAt;
-        this.updateAt = updateAt;
     }
 
     public void update(String title, String content) {
@@ -54,4 +52,11 @@ public class Article {
         this.content = content;
     }
 
+    public Article(String title, String content, String author, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.title = title;
+        this.content = content;
+        this.author = author;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 }
